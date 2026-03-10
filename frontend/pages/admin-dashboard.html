@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+<title>Admin Weapon Control</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#020617;
+color:white;
+margin:0;
+padding:40px;
+}
+
+h1{
+text-align:center;
+margin-bottom:30px;
+letter-spacing:2px;
+}
+
+.table-container{
+max-width:1000px;
+margin:auto;
+background:#0f172a;
+padding:20px;
+border-radius:10px;
+box-shadow:0 0 15px rgba(0,0,0,0.6);
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th{
+background:#1e293b;
+padding:12px;
+text-align:left;
+}
+
+td{
+padding:12px;
+border-bottom:1px solid #1e293b;
+}
+
+tr:hover{
+background:#1e293b;
+}
+
+button{
+padding:6px 14px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.delete{
+background:#ef4444;
+color:white;
+}
+
+.delete:hover{
+background:#dc2626;
+}
+
+.refresh{
+background:#22c55e;
+color:white;
+margin-bottom:15px;
+}
+
+.refresh:hover{
+background:#16a34a;
+}
+
+.logout{
+background:#64748b;
+color:white;
+float:right;
+}
+
+.logout:hover{
+background:#475569;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<script>
+
+/* ADMIN AUTH CHECK */
+
+if(localStorage.getItem("adminLoggedIn") !== "true"){
+window.location.href = "control-room-login.html";
+}
+
+</script>
+
+<h1>Weapon Control Panel</h1>
+
+<button class="logout" onclick="logout()">Logout</button>
+
+<div class="table-container">
+
+<a href="admin.html">
+<button class="refresh">Add New Weapon</button>
+</a>
+
+<button class="refresh" onclick="loadWeapons()">Refresh</button>
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Weapon</th>
+<th>Units</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="weaponTable"></tbody>
+
+</table>
+
+</div>
+
+<br>
+
+<a href="admin-equipment.html">
+<button>Manage Equipment</button>
+</a>
+
+<script>
+
+/* LOAD WEAPONS */
+
+async function loadWeapons(){
+
+try{
+
+const res = await fetch("http://localhost:3000/weapons");
+
+if(!res.ok) throw new Error("Failed to fetch weapons");
+
+const weapons = await res.json();
+
+renderWeapons(weapons);
+
+}catch(err){
+
+console.error(err);
+alert("Error loading weapons. Make sure the server is running.");
+
+}
+
+}
+
+
+/* RENDER WEAPONS */
+
+function renderWeapons(weapons){
+
+const table = document.getElementById("weaponTable");
+
+table.innerHTML = "";
+
+if(!weapons || weapons.length === 0){
+
+table.innerHTML = `
+<tr>
+<td colspan="4">No weapons found</td>
+</tr>
+`;
+
+return;
+
+}
+
+weapons.forEach(w=>{
+
+const row = document.createElement("tr");
+
+row.innerHTML = `
+<td>${w.weapon_id}</td>
+<td>${w.weapon_name}</td>
+<td>${w.units_available}</td>
+<td>
+<button onclick="editWeapon(${w.weapon_id})">Edit</button>
+<button class="delete" onclick="deleteWeapon(${w.weapon_id})">Delete</button>
+</td>
+`;
+
+table.appendChild(row);
+
+});
+
+}
+
+
+/* DELETE WEAPON */
+
+async function deleteWeapon(id){
+
+if(!confirm("Delete this weapon?")) return;
+
+try{
+
+const res = await fetch(`http://localhost:3000/admin/delete-weapon/${id}`,{
+method:"DELETE"
+});
+
+if(!res.ok) throw new Error("Delete failed");
+
+loadWeapons();
+
+}catch(err){
+
+console.error(err);
+alert("Could not delete weapon.");
+
+}
+
+}
+
+
+/* EDIT WEAPON */
+
+function editWeapon(id){
+
+window.location.href = `edit-weapon.html?id=${id}`;
+
+}
+
+
+/* LOGOUT */
+
+function logout(){
+
+localStorage.removeItem("adminLoggedIn");
+window.location.href = "control-room-login.html";
+
+}
+
+
+/* INITIAL LOAD */
+
+document.addEventListener("DOMContentLoaded",()=>{
+loadWeapons();
+});
+
+</script>
+
+</body>
+</html>

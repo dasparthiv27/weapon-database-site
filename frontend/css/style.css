@@ -1,0 +1,473 @@
+/* ================= GLOBAL ================= */
+
+body{
+margin:0;
+font-family:Arial;
+color:white;
+overflow-x:hidden;
+overflow-y:auto;
+}
+
+/* ================= BACKGROUND VIDEO ================= */
+
+#bgVideo{
+position:fixed;
+right:0;
+bottom:0;
+min-width:100%;
+min-height:100%;
+object-fit:cover;
+z-index:-2;
+filter: brightness(1.15) contrast(1.05);
+}
+
+/* ================= OVERLAY ================= */
+
+.overlay{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+min-height:100vh;
+
+background:rgba(0,0,0,0.55);
+
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:flex-start;
+
+padding-top:120px;
+padding-bottom:80px;
+
+text-align:center;
+}
+
+/* ================= WELCOME TEXT ================= */
+
+#welcomeText{
+font-size:90px;
+letter-spacing:3px;
+animation:introText 3s forwards;
+}
+
+@keyframes introText{
+
+0%{
+transform:translateY(0);
+font-size:95px;
+opacity:0;
+}
+
+40%{
+opacity:1;
+}
+
+100%{
+transform:translateY(-120px);
+font-size:60px;
+}
+
+}
+
+/* ================= MENU ================= */
+
+#menu{
+display:flex;
+flex-direction:column;
+gap:25px;
+margin-top:40px;
+
+animation:menuAppear 2s forwards;
+animation-delay:2.2s;
+opacity:0;
+}
+
+@keyframes menuAppear{
+
+0%{
+opacity:0;
+transform:translateY(20px);
+}
+
+100%{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+/* ================= MENU BUTTONS ================= */
+
+#menu a{
+
+text-decoration:none;
+color:white;
+
+padding:16px 60px;
+
+font-size:22px;
+letter-spacing:2px;
+
+border:2px solid rgba(255,255,255,0.7);
+
+background:rgba(0,0,0,0.35);
+
+border-radius:10px;
+
+transition:all 0.35s ease;
+
+box-shadow:
+0 0 12px rgba(255,255,255,0.25),
+inset 0 0 12px rgba(255,255,255,0.08);
+
+width:300px;
+text-align:center;
+
+}
+
+#menu a:hover{
+
+transform:scale(1.08);
+
+background:rgba(255,255,255,0.92);
+color:black;
+
+box-shadow:
+0 0 25px rgba(255,255,255,0.9),
+0 0 60px rgba(255,255,255,0.7);
+
+}
+
+/* ================= SEARCH PAGE ================= */
+
+.search-section{
+margin-top:140px;
+}
+
+.search-container{
+
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:20px;
+
+background:rgba(20,20,20,0.85);
+
+padding:40px;
+
+border-radius:12px;
+
+border:1px solid rgba(255,255,255,0.1);
+
+box-shadow:
+0 0 25px rgba(0,0,0,0.7),
+0 0 15px rgba(255,255,255,0.1);
+
+}
+
+.title{
+font-size:32px;
+letter-spacing:2px;
+}
+
+.search-container input{
+
+width:300px;
+padding:12px;
+
+border:none;
+border-radius:6px;
+
+font-size:16px;
+
+outline:none;
+
+}
+
+.search-container button{
+
+padding:10px 25px;
+
+background:#1e90ff;
+
+border:none;
+
+border-radius:6px;
+
+font-size:16px;
+
+color:white;
+
+cursor:pointer;
+
+transition:0.3s;
+
+}
+
+.search-container button:hover{
+
+background:#0d6efd;
+transform:scale(1.05);
+
+}
+
+/* ================= RESULT AREA ================= */
+
+#result{
+
+margin-top:80px;
+
+display:flex;
+justify-content:center;
+
+}
+
+/* ================= WEAPON CARD ================= */
+
+.weaponCard{
+
+margin-top:20px;
+padding:30px;
+width:420px;
+
+background:rgba(20,20,20,0.9);
+border-radius:14px;
+
+border:1px solid rgba(255,255,255,0.2);
+
+box-shadow:
+0 0 30px rgba(0,0,0,0.7),
+0 0 15px rgba(255,255,255,0.15);
+
+text-align:center;
+
+backdrop-filter: blur(6px);
+-webkit-backdrop-filter: blur(6px);
+
+transform:translateZ(0);
+
+transition:transform 0.25s ease;
+
+cursor:pointer;
+
+}
+
+.weaponCard:hover{
+transform:scale(1.05);
+}
+
+/* weapon image */
+
+.weaponCard img{
+width:300px;
+margin:15px 0;
+display:block;
+transform:translateZ(0);
+}
+
+/* weapon stats */
+
+.weaponStats{
+text-align:left;
+padding-left:20px;
+}
+
+/* ================= STAT BARS ================= */
+
+.statRow{
+
+display:flex;
+align-items:center;
+gap:12px;
+margin:12px 0;
+
+}
+
+.statRow span{
+
+width:120px;
+font-weight:bold;
+
+}
+
+.statBar{
+
+flex:1;
+height:14px;
+background:#2a2a2a;
+border-radius:8px;
+overflow:hidden;
+box-shadow: inset 0 0 6px rgba(0,0,0,0.6);
+
+}
+
+.statBar div{
+
+height:100%;
+background:linear-gradient(90deg,#1e90ff,#00bfff);
+border-radius:8px;
+width:0;
+transition:width 1.2s ease;
+
+}
+
+/* ================= CATEGORY BUTTONS ================= */
+
+#categories button{
+
+padding:14px 30px;
+margin:10px;
+
+font-size:18px;
+
+background:rgba(0,0,0,0.6);
+
+border:1px solid white;
+
+color:white;
+
+cursor:pointer;
+
+border-radius:6px;
+
+transition:0.3s;
+
+}
+
+#categories button:hover{
+
+background:white;
+color:black;
+
+}
+
+/* ================= CATEGORY WEAPON GRID ================= */
+
+#weapons{
+
+margin-top:40px;
+
+display:grid;
+
+
+grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+
+gap:30px;
+
+width:80%;
+max-width:1100px;
+
+transform:translateZ(0);
+
+}
+
+#weapons .weaponCard{
+
+width:auto;
+padding:px;
+
+}
+
+#weapons {
+  margin-top: 40px;
+  display: flex;              /* use flexbox */
+  justify-content: center;    /* center horizontally */
+  align-items: center;        /* center vertically if container has height */
+  flex-wrap: wrap;            /* allow multiple cards side by side */
+  gap: 30px;
+  width: 80%;
+  max-width: 1100px;
+  margin-left: auto;          /* center the whole block */
+  margin-right: auto;
+  text-align: center;         /* center text inside */
+}
+
+/* ================= EQUIPMENT GRID ================= */
+
+#equipmentGrid{
+
+margin-top:40px;
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+
+gap:30px;
+
+width:80%;
+max-width:1000px;
+
+}
+
+#equipmentGrid img{
+
+width:120px;
+margin-top:15px;
+
+}
+
+/* ================= SEARCH SUGGESTIONS ================= */
+
+#suggestions{
+
+width:300px;
+background:rgba(0,0,0,0.85);
+border-radius:6px;
+margin-top:-10px;
+max-height:200px;
+overflow-y:auto;
+
+}
+
+.suggestion-item{
+
+padding:10px;
+cursor:pointer;
+border-bottom:1px solid rgba(255,255,255,0.1);
+
+}
+
+.suggestion-item:hover{
+
+background:rgba(255,255,255,0.1);
+
+}
+
+/* ================= BACK BUTTON ================= */
+
+.backBtn{
+
+margin-top:40px;
+
+text-decoration:none;
+
+color:white;
+
+border:1px solid white;
+
+padding:10px 20px;
+
+transition:0.3s;
+
+}
+
+.backBtn:hover{
+
+background:white;
+color:black;
+
+}
+
+/* ================= STOCK TEXT ================= */
+
+.stock{
+font-size:14px;
+color:#00ffcc;
+margin-top:5px;
+}
+
+.tapHint{
+font-size:12px;
+opacity:0.7;
+}

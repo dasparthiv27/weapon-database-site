@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Other Equipment</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<!-- BACKGROUND VIDEO -->
+
+<video autoplay muted loop id="bgVideo">
+<source src="video/military.mp4" type="video/mp4">
+</video>
+
+<div class="overlay">
+
+<h1>Other Equipment</h1>
+
+<div id="equipmentGrid"></div>
+
+<!-- BACK BUTTON -->
+<a class="backBtn" href="index.html">Back</a>
+
+</div>
+
+<script>
+async function loadEquipment() {
+    try {
+        const response = await fetch("http://localhost:3000/api/equipment");
+        const equipment = await response.json();
+        const grid = document.getElementById("equipmentGrid");
+        grid.innerHTML = "";
+
+        equipment.forEach(e => {
+            const card = `
+                <div class="weaponCard">
+                    <h2>${e.equipment_name}</h2>
+                    <img src="images/equipment/${e.image}" alt="${e.equipment_name}">
+                </div>
+            `;
+            grid.innerHTML += card;
+        });
+    } catch (err) {
+        console.error("Error loading equipment:", err);
+    }
+}
+
+loadEquipment();
+</script>
+</body>
+</html>

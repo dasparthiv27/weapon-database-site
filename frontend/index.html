@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Weapon Database</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<!-- BACKGROUND VIDEO -->
+<video autoplay muted loop id="bgVideo">
+<source src="video/military.mp4" type="video/mp4">    
+</video>
+
+<!-- OVERLAY -->
+<div class="overlay">
+
+<h1 id="welcomeText">Weapon Database</h1>
+
+<div id="menu">
+
+<a href="search.html">Search Weapon</a>
+
+<a href="categories.html">Weapon Categories</a>
+
+<a href="equipment.html">Other Equipment</a>
+
+
+
+</div>
+
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+const title = document.getElementById("welcomeText");
+const menu = document.getElementById("menu");
+
+if(sessionStorage.getItem("visited")){
+
+/* skip animation */
+
+title.style.animation = "none";
+title.style.transform = "translateY(-120px)";
+title.style.fontSize = "60px";
+title.style.opacity = "1";
+
+menu.style.opacity = "1";
+
+}else{
+
+/* first visit animation */
+
+sessionStorage.setItem("visited","true");
+
+}
+
+});
+
+</script>
+</body>
+
+</html>

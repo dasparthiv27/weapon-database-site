@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Search Weapon</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<!-- BACKGROUND VIDEO -->
+
+<video autoplay muted loop id="bgVideo">
+<source src="video/military.mp4" type="video/mp4">
+</video>
+
+<!-- OVERLAY -->
+
+<div class="overlay">
+
+<!-- SEARCH AREA -->
+
+<div class="search-section">
+
+<div class="search-container">
+
+<h1 class="title">Weapon Search</h1>
+
+<input
+type="text"
+id="weaponInput"
+placeholder="Enter weapon name (example: MP40)"
+>
+
+<div id="suggestions"></div>
+
+<button onclick="searchWeapon()">Search</button>
+
+</div>
+
+</div>
+
+<!-- RESULT AREA -->
+
+<div id="result"></div>
+
+    <!-- BACK BUTTON -->
+    <a class="backBtn" href="index.html">Back</a>
+</div>
+
+<script src="js/search.js"></script>
+
+</body>
+
+</html>
