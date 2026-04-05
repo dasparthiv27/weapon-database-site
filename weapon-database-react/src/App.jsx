@@ -20,6 +20,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/weapons" element={<WeaponsPage />} />
           <Route path="/weapon/:id" element={<WeaponDetailsPage />} />
+          <Route path="/weapons/:id" element={<WeaponDetailsPage />} />
           <Route path="/categories" element={<CategoriesPage />} />
           <Route path="/search" element={<SearchResultsPage />} />
           <Route path="*" element={<HomePage />} />

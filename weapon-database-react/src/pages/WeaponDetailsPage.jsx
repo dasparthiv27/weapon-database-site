@@ -3,7 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import AnimatedStatBar from "../components/AnimatedStatBar";
 import ErrorPanel from "../components/ErrorPanel";
 import LoadingPanel from "../components/LoadingPanel";
-import { fetchJson, getImageUrl, IMAGE_FALLBACK } from "../lib/api";
+import { fetchJson } from "../lib/api";
+import { DEFAULT_WEAPON_IMAGE_PATH, getWeaponImage } from "../utils/getWeaponImage";
 
 function WeaponDetailsPage() {
   const { id } = useParams();
@@ -47,6 +48,8 @@ function WeaponDetailsPage() {
     return <ErrorPanel message={error || "Weapon not found."} />;
   }
 
+  console.log("Loading image:", weapon.image);
+
   const attachments = weapon.attachments
     ? weapon.attachments.split(",").map((item) => item.trim()).filter(Boolean)
     : [];
@@ -56,10 +59,10 @@ function WeaponDetailsPage() {
       <div className="detail-panel">
         <div className="detail-image">
           <img
-            src={getImageUrl(weapon.image)}
+            src={getWeaponImage(weapon.image)}
             alt={weapon.weapon_name}
             onError={(event) => {
-              event.currentTarget.src = IMAGE_FALLBACK;
+              event.currentTarget.src = DEFAULT_WEAPON_IMAGE_PATH;
             }}
           />
         </div>

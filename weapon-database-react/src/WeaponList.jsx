@@ -1,28 +1,8 @@
 import { useEffect, useState } from "react";
+import { DEFAULT_WEAPON_IMAGE_PATH, getWeaponImage } from "./utils/getWeaponImage";
 
 const ENV_BASE_URL = import.meta.env.VITE_API_BASE_URL?.trim();
 const BASE_URL = ENV_BASE_URL || "https://weapon-database-site.onrender.com";
-
-const getImageUrl = (img) => {
-  const normalized = String(img || "").replace(/\\/g, "/").replace(/^\/+/, "");
-
-  if (!normalized) {
-    return "";
-  }
-  if (normalized.startsWith("http://") || normalized.startsWith("https://")) {
-    return normalized;
-  }
-  if (normalized.startsWith("images/")) {
-    return `${BASE_URL}/${normalized}`;
-  }
-  if (normalized.startsWith("frontend/images/")) {
-    return `${BASE_URL}/${normalized.replace(/^frontend\//, "")}`;
-  }
-  if (normalized.startsWith("weapons/")) {
-    return `${BASE_URL}/images/${normalized}`;
-  }
-  return `${BASE_URL}/images/weapons/${normalized}`;
-};
 
 function WeaponList() {
   const [weapons, setWeapons] = useState([]);
@@ -52,9 +32,12 @@ function WeaponList() {
             <h3>{weapon.weapon_name}</h3>
             {console.log("IMAGE PATH:", weapon.image)}
             <img
-              src={getImageUrl(weapon.image)}
+              src={getWeaponImage(weapon.image)}
               alt={weapon.weapon_name}
               width="200"
+              onError={(event) => {
+                event.currentTarget.src = DEFAULT_WEAPON_IMAGE_PATH;
+              }}
             />
           </div>
         ))

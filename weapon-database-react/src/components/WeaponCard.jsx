@@ -1,25 +1,26 @@
 import { Link } from "react-router-dom";
 import useUiSounds from "../hooks/useUiSounds";
-import { getImageUrl, IMAGE_FALLBACK } from "../lib/api";
+import { DEFAULT_WEAPON_IMAGE_PATH, getWeaponImage } from "../utils/getWeaponImage";
 
 function WeaponCard({ weapon }) {
   const { playClick, playHover } = useUiSounds();
+  console.log("Loading image:", weapon.image);
 
   return (
     <Link
-      to={`/weapons/${weapon.weapon_id}`}
+      to={`/weapon/${weapon.weapon_id}`}
       className="weapon-card fade-rise"
       onClick={playClick}
       onMouseEnter={playHover}
     >
       <div className="weapon-card__media">
         <img
-          src={getImageUrl(weapon.image)}
+          src={getWeaponImage(weapon.image)}
           alt={weapon.weapon_name}
           loading="lazy"
           decoding="async"
           onError={(event) => {
-            event.currentTarget.src = IMAGE_FALLBACK;
+            event.currentTarget.src = DEFAULT_WEAPON_IMAGE_PATH;
           }}
         />
       </div>
