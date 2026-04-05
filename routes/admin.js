@@ -206,10 +206,12 @@ router.post("/login",(req,res)=>{
 
 const {username,password}=req.body;
 
-/* simple credentials */
+const ADMIN_USER = process.env.ADMIN_USER;
+const ADMIN_PASS = process.env.ADMIN_PASS;
 
-const ADMIN_USER="das";
-const ADMIN_PASS="unlock123";
+if (!ADMIN_USER || !ADMIN_PASS) {
+return res.status(500).json({ success: false, error: "Admin credentials not configured" });
+}
 
 if(username===ADMIN_USER && password===ADMIN_PASS){
 

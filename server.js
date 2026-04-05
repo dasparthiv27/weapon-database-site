@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
@@ -17,10 +19,17 @@ console.log(
 
 /* MIDDLEWARE */
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "*",
+  }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/images", express.static(path.resolve(__dirname, "..", "frontend", "images")));
+app.use(
+  "/images",
+  express.static(path.resolve(__dirname, "..", "frontend", "images")),
+);
 
 /* ROUTES */
 
@@ -32,8 +41,8 @@ app.use("/equipment", equipmentRoutes);
 
 /* SERVER */
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
