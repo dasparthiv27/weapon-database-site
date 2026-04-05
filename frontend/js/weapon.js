@@ -1,3 +1,9 @@
+const BASE_URL =
+window.location.hostname === "localhost" ||
+window.location.hostname === "127.0.0.1"
+? "http://localhost:3000"
+: "http://192.168.20.4:3000";
+
 // Get weapon id from URL
 function getWeaponId() {
 const params = new URLSearchParams(window.location.search);
@@ -12,7 +18,7 @@ if (!id) return;
 
 try {
 
-const response = await fetch(`http://localhost:3000/weapons/${id}`);
+const response = await fetch(`${BASE_URL}/weapons/${id}`);
 const weapon = await response.json();
 
 renderWeapon(weapon);

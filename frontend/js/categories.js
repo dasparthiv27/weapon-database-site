@@ -13,12 +13,18 @@ menu.style.opacity = "1";
 
 }, 4000);
 
+const BASE_URL =
+window.location.hostname === "localhost" ||
+window.location.hostname === "127.0.0.1"
+? "http://localhost:3000"
+: "http://192.168.20.4:3000";
+
 // LOAD WEAPON CATEGORIES
 async function loadCategories() {
 
 try {
 
-const response = await fetch("http://localhost:3000/categories");
+const response = await fetch(`${BASE_URL}/categories`);
 const categories = await response.json();
 
 const container = document.getElementById("categories");
@@ -54,7 +60,7 @@ async function loadWeapons(categoryId) {
 
 try {
 
-const response = await fetch(`http://localhost:3000/categories/${categoryId}`);
+const response = await fetch(`${BASE_URL}/categories/${categoryId}`);
 const weapons = await response.json();
 
 const container = document.getElementById("weapons");

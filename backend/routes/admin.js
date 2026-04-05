@@ -208,8 +208,8 @@ const {username,password}=req.body;
 
 /* simple credentials */
 
-const ADMIN_USER="admin";
-const ADMIN_PASS="securepassword123";
+const ADMIN_USER="das";
+const ADMIN_PASS="unlock123";
 
 if(username===ADMIN_USER && password===ADMIN_PASS){
 

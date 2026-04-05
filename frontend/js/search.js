@@ -1,3 +1,9 @@
+const BASE_URL =
+window.location.hostname === "localhost" ||
+window.location.hostname === "127.0.0.1"
+? "http://localhost:3000"
+: "http://192.168.20.4:3000";
+
 async function searchWeapon() {
 
 const input = document.getElementById("weaponInput").value.trim().toLowerCase();
@@ -12,7 +18,7 @@ return;
 
 try {
 
-const response = await fetch("http://localhost:3000/weapons");
+const response = await fetch(`${BASE_URL}/weapons`);
 const data = await response.json();
 
 /* find weapon */
@@ -107,7 +113,7 @@ suggestionBox.innerHTML = "";
 return;
 }
 
-const response = await fetch("http://localhost:3000/weapons");
+const response = await fetch(`${BASE_URL}/weapons`);
 const data = await response.json();
 
 const names = [...new Set(data.map(w => w.weapon_name))];
