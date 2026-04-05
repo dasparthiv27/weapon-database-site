@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Panel - Add Weapon</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#0f172a;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.container{
+background:#1e293b;
+padding:30px;
+border-radius:10px;
+width:400px;
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin-bottom:12px;
+border:none;
+border-radius:5px;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#22c55e;
+border:none;
+border-radius:5px;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#16a34a;
+}
+
+#attachmentsContainer{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-bottom:15px;
+}
+
+.attachment-chip{
+padding:8px 14px;
+border-radius:20px;
+background:#334155;
+cursor:pointer;
+font-size:14px;
+user-select:none;
+transition:0.2s;
+}
+
+.attachment-chip:hover{
+background:#475569;
+}
+
+.attachment-chip.selected{
+background:#22c55e;
+color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<script>
+
+/* ADMIN AUTH CHECK FIRST */
+
+if(localStorage.getItem("adminLoggedIn") !== "true"){
+window.location.href = "control-room-login.html";
+}
+
+</script>
+
+<div class="container">
+
+<h2>Add New Weapon</h2>
+
+<form id="weaponForm">
+
+<input type="text" name="weapon_name" placeholder="Weapon Name" required>
+<input type="number" name="damage" placeholder="Damage" required>
+<input type="number" name="fire_rate" placeholder="Fire Rate" required>
+<input type="number" name="range_value" placeholder="Range" required>
+<input type="number" name="accuracy" placeholder="Accuracy" required>
+<input type="number" name="mobility" placeholder="Mobility" required>
+<input type="number" name="magazine_size" placeholder="Magazine Size" required>
+
+<input type="number" step="0.1" name="reload_time" placeholder="Reload Time (seconds)" required>
+
+<input type="number" name="units_available" placeholder="Units Available" required>
+
+<select name="category_id" id="categorySelect">
+<option value="">Select Category</option>
+</select>
+
+<label>Attachments</label>
+
+<div id="attachmentsContainer"></div>
+
+<input type="file" name="weapon_image" accept="image/*" required>
+
+<button type="submit">Add Weapon</button>
+
+</form>
+
+</div>
+
+<script>
+
+const form = document.getElementById("weaponForm");
+const categorySelect = document.getElementById("categorySelect");
+const attachmentsContainer = document.getElementById("attachmentsContainer");
+
+
+/* LOAD CATEGORIES */
+
+async function loadCategories(){
+
+try{
+
+const response = await fetch("http://localhost:3000/categories");
+const categories = await response.json();
+
+categories.forEach(cat => {
+
+const option = document.createElement("option");
+
+option.value = cat.category_id;
+option.textContent = cat.category_name;
+
+categorySelect.appendChild(option);
+
+});
+
+}catch(err){
+
+console.error("Failed to load categories", err);
+
+}
+
+}
+
+
+/* LOAD ATTACHMENTS */
+
+async function loadAttachments(){
+
+try{
+
+const response = await fetch("http://localhost:3000/attachments");
+const attachments = await response.json();
+
+attachments.forEach(att => {
+
+const chip = document.createElement("div");
+
+chip.className = "attachment-chip";
+chip.textContent = att.attachment_name;
+chip.dataset.id = att.attachment_id;
+
+chip.addEventListener("click", () => {
+chip.classList.toggle("selected");
+});
+
+attachmentsContainer.appendChild(chip);
+
+});
+
+}catch(err){
+
+console.error("Failed to load attachments", err);
+
+}
+
+}
+
+
+/* SUBMIT FORM */
+
+form.addEventListener("submit", async (e)=>{
+
+e.preventDefault();
+
+try{
+
+const formData = new FormData(form);
+
+const selected = document.querySelectorAll(".attachment-chip.selected");
+
+selected.forEach(chip=>{
+formData.append("attachments", chip.dataset.id);
+});
+
+const response = await fetch("http://localhost:3000/admin/add-weapon",{
+method:"POST",
+body:formData
+});
+
+const result = await response.json();
+
+if(response.ok){
+
+alert(result.message || "Weapon added successfully");
+
+form.reset();
+
+document.querySelectorAll(".attachment-chip.selected")
+.forEach(chip => chip.classList.remove("selected"));
+
+}else{
+
+alert(result.error || "Failed to add weapon");
+
+}
+
+}catch(err){
+
+console.error(err);
+alert("Server connection error");
+
+}
+
+});
+
+
+/* PAGE LOAD */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+loadCategories();
+loadAttachments();
+
+});
+
+</script>
+
+</body>
+</html>

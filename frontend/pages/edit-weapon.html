@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+<title>Edit Weapon</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#020617;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.container{
+background:#0f172a;
+padding:30px;
+border-radius:10px;
+width:420px;
+}
+
+label{
+display:block;
+margin-top:10px;
+margin-bottom:4px;
+font-size:14px;
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin-bottom:8px;
+border:none;
+border-radius:5px;
+}
+
+button{
+padding:10px;
+width:100%;
+background:#22c55e;
+border:none;
+border-radius:5px;
+color:white;
+font-weight:bold;
+cursor:pointer;
+margin-top:10px;
+}
+
+#attachmentsContainer{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-bottom:15px;
+}
+
+.attachment-chip{
+padding:8px 14px;
+border-radius:20px;
+background:#334155;
+cursor:pointer;
+font-size:14px;
+user-select:none;
+}
+
+.attachment-chip.selected{
+background:#22c55e;
+color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Edit Weapon</h2>
+
+<form id="editForm">
+
+<label>Weapon Name</label> <input type="text" id="weapon_name">
+
+<label>Category</label> <select id="category"></select>
+
+<label>Damage</label> <input type="number" id="damage">
+
+<label>Fire Rate</label> <input type="number" id="fire_rate">
+
+<label>Range</label> <input type="number" id="range_value">
+
+<label>Accuracy</label> <input type="number" id="accuracy">
+
+<label>Mobility</label> <input type="number" id="mobility">
+
+<label>Magazine Size</label> <input type="number" id="magazine_size">
+
+<label>Reload Time</label> <input type="number" step="0.1" id="reload_time">
+
+<label>Units Available</label> <input type="number" id="units_available">
+
+<label>Attachments</label>
+
+<div id="attachmentsContainer"></div>
+
+<button type="submit">Update Weapon</button>
+
+</form>
+
+</div>
+
+<script>
+
+let selectedAttachments = [];
+
+const params = new URLSearchParams(window.location.search);
+const weaponId = params.get("id");
+
+
+/* LOAD CATEGORIES */
+
+async function loadCategories(){
+
+const res = await fetch("http://localhost:3000/categories");
+const categories = await res.json();
+
+const select = document.getElementById("category");
+
+categories.forEach(cat => {
+
+const option = document.createElement("option");
+
+option.value = cat.category_id;
+option.textContent = cat.category_name;
+
+select.appendChild(option);
+
+});
+
+}
+
+
+/* LOAD WEAPON */
+
+async function loadWeapon(){
+
+const res = await fetch(`http://localhost:3000/weapons/${weaponId}`);
+const weapon = await res.json();
+
+document.getElementById("weapon_name").value = weapon.weapon_name;
+document.getElementById("damage").value = weapon.damage;
+document.getElementById("fire_rate").value = weapon.fire_rate;
+document.getElementById("range_value").value = weapon.range_value;
+document.getElementById("accuracy").value = weapon.accuracy;
+document.getElementById("mobility").value = weapon.mobility;
+document.getElementById("magazine_size").value = weapon.magazine_size;
+document.getElementById("reload_time").value = weapon.reload_time;
+document.getElementById("units_available").value = weapon.units_available;
+
+document.getElementById("category").value = weapon.category_id;
+
+if(weapon.attachments){
+selectedAttachments = weapon.attachments.split(",");
+}
+
+}
+
+
+/* LOAD ATTACHMENTS */
+
+async function loadAttachments(){
+
+const res = await fetch("http://localhost:3000/attachments");
+const attachments = await res.json();
+
+const container = document.getElementById("attachmentsContainer");
+
+container.innerHTML="";
+
+attachments.forEach(att => {
+
+const chip = document.createElement("div");
+
+chip.className = "attachment-chip";
+chip.textContent = att.attachment_name;
+chip.dataset.id = att.attachment_id;
+
+if(selectedAttachments.includes(att.attachment_name)){
+chip.classList.add("selected");
+}
+
+chip.onclick = () => {
+chip.classList.toggle("selected");
+};
+
+container.appendChild(chip);
+
+});
+
+}
+
+
+/* UPDATE WEAPON */
+
+document.getElementById("editForm").addEventListener("submit", async (e)=>{
+
+e.preventDefault();
+
+const data = {
+
+weapon_name:document.getElementById("weapon_name").value,
+category_id:document.getElementById("category").value,
+damage:document.getElementById("damage").value,
+fire_rate:document.getElementById("fire_rate").value,
+range_value:document.getElementById("range_value").value,
+accuracy:document.getElementById("accuracy").value,
+mobility:document.getElementById("mobility").value,
+magazine_size:document.getElementById("magazine_size").value,
+reload_time:document.getElementById("reload_time").value,
+units_available:document.getElementById("units_available").value
+
+};
+
+const selected = document.querySelectorAll(".attachment-chip.selected");
+
+data.attachments=[];
+
+selected.forEach(chip=>{
+data.attachments.push(chip.dataset.id);
+});
+
+const res = await fetch(`http://localhost:3000/admin/update-weapon/${weaponId}`,{
+
+method:"PUT",
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify(data)
+
+});
+
+if(res.ok){
+
+alert("Weapon updated successfully");
+window.location.href="admin-dashboard.html";
+
+}else{
+
+alert("Failed to update weapon");
+
+}
+
+});
+
+
+/* INIT PAGE */
+
+async function init(){
+
+await loadCategories();
+await loadWeapon();
+await loadAttachments();
+
+}
+
+init();
+
+</script>
+
+</body>
+</html>
