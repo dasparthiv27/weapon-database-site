@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 const BASE_URL =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1"
-    ? "http://localhost:3000"
-    : "http://192.168.20.4:3000";
+    ? "https://weapon-database-site.onrender.com"
+    : "https://weapon-database-site.onrender.com";
 
 const getImageUrl = (img) => {
   const normalized = String(img || "").replace(/\\/g, "/").replace(/^\/+/, "");
