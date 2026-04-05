@@ -8,7 +8,7 @@ const db = mysql.createConnection({
   database: process.env.DB_NAME,
 });
 
-console.log("DB HOST:", process.env.DB_HOST); // debug
+console.log("DB HOST:", process.env.DB_HOST);
 
 db.connect((err) => {
   if (err) {
