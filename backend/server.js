@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const weaponsRoutes = require("./routes/weapons");
 const categoriesRoutes = require("./routes/categories");
@@ -9,11 +10,17 @@ const equipmentRoutes = require("./routes/equipment");
 
 const app = express();
 
+console.log(
+  "Serving images from:",
+  path.join(__dirname, "../frontend/images")
+);
+
 /* MIDDLEWARE */
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/images", express.static(path.resolve(__dirname, "..", "frontend", "images")));
 
 /* ROUTES */
 
@@ -28,5 +35,5 @@ app.use("/equipment", equipmentRoutes);
 const PORT = 3000;
 
 app.listen(PORT, () => {
-console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
