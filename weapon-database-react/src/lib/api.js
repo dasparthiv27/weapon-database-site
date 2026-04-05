@@ -1,8 +1,7 @@
-export const BASE_URL =
-  window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1"
-    ? "https://weapon-database-site.onrender.com"
-    : "https://weapon-database-site.onrender.com";
+const ENV_BASE_URL = import.meta.env.VITE_API_BASE_URL?.trim();
+const FALLBACK_BASE_URL = "https://weapon-database-site.onrender.com";
+
+export const BASE_URL = ENV_BASE_URL || FALLBACK_BASE_URL;
 
 const IMAGE_FALLBACK =
   "data:image/svg+xml;charset=UTF-8," +
@@ -25,6 +24,9 @@ export function getImageUrl(img, folder = "weapons") {
   if (normalized.startsWith("http://") || normalized.startsWith("https://")) {
     return normalized;
   }
+  if (!BASE_URL) {
+    return IMAGE_FALLBACK;
+  }
   if (normalized.startsWith("images/")) {
     return `${BASE_URL}/${normalized}`;
   }
@@ -38,39 +40,49 @@ export function getImageUrl(img, folder = "weapons") {
 }
 
 export async function fetchJson(pathname) {
-  const response = await fetch(`${BASE_URL}${pathname}`);
+  try {
+    const response = await fetch(`${BASE_URL}${pathname}`);
 
-  if (!response.ok) {
-    throw new Error(`Request failed with status ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("API failed:", error);
+    throw new Error("API is currently unavailable.");
   }
-
-  return response.json();
 }
 
 export async function requestJson(pathname, options = {}) {
-  const response = await fetch(`${BASE_URL}${pathname}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    },
-    ...options,
-  });
+  try {
+    const response = await fetch(`${BASE_URL}${pathname}`, {
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+      },
+      ...options,
+    });
 
-  if (!response.ok) {
-    throw new Error(`Request failed with status ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+
+    if (response.status === 204) {
+      return null;
+    }
+
+    const contentType = response.headers.get("content-type") || "";
+
+    if (contentType.includes("application/json")) {
+      return response.json();
+    }
+
+    return response.text();
+  } catch (error) {
+    console.error("API failed:", error);
+    throw new Error("API is currently unavailable.");
   }
-
-  if (response.status === 204) {
-    return null;
-  }
-
-  const contentType = response.headers.get("content-type") || "";
-
-  if (contentType.includes("application/json")) {
-    return response.json();
-  }
-
-  return response.text();
 }
 
 export { IMAGE_FALLBACK };

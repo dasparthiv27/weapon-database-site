@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 
-const BASE_URL =
-  window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1"
-    ? "https://weapon-database-site.onrender.com"
-    : "https://weapon-database-site.onrender.com";
+const ENV_BASE_URL = import.meta.env.VITE_API_BASE_URL?.trim();
+const BASE_URL = ENV_BASE_URL || "https://weapon-database-site.onrender.com";
 
 const getImageUrl = (img) => {
   const normalized = String(img || "").replace(/\\/g, "/").replace(/^\/+/, "");
@@ -31,13 +28,18 @@ function WeaponList() {
   const [weapons, setWeapons] = useState([]);
 
   useEffect(() => {
-    fetch(`${BASE_URL}/weapons`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("DATA:", data); // debug
-        setWeapons(data);
-      })
-      .catch((err) => console.error("ERROR:", err));
+    const loadWeapons = async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/weapons`);
+        const data = await res.json();
+        setWeapons(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("API failed:", error);
+        setWeapons([]);
+      }
+    };
+
+    loadWeapons();
   }, []);
 
   return (
